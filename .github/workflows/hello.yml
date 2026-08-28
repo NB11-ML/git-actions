@@ -24,3 +24,7 @@ jobs:
 
       - name: Print Runner Operating System
         run: echo "This job is executing on ➔ ${{ runner.os }}"
+
+
+      - name: Break Pipeline On Purpose
+        run: exit 1
