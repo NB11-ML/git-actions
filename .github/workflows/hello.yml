@@ -26,5 +26,5 @@ jobs:
         run: echo "This job is executing on ➔ ${{ runner.os }}"
 
 
-      - name: Break Pipeline On Purpose
-        run: exit 1
+      #- name: Break Pipeline On Purpose
+      #  run: exit 1
