@@ -8,6 +8,13 @@ jobs:
       - name: System Info
         run: echo "OS ➔ ${{ runner.os }} | Hostname ➔ $(hostname) | User ➔ $(whoami)"
 
+      - name: Verify Pre-installed SRE Tools
+        run: |
+          docker --version
+          python3 --version
+          node --version
+          git --version
+
   windows-job:
     runs-on: windows-latest
     steps:
