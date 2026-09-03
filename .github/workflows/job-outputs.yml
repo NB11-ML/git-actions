@@ -18,4 +18,5 @@ jobs:
     needs: [generate_data]
     steps:
       - name: Print Received Upstream Output
-        run: echo "The upstream build completed at: ${{ needs.generate_data.outputs.build_date }}"
+        run:  |
+           echo "The upstream build completed at: ${{ needs.generate_data.outputs.build_date }}"
