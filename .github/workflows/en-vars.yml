@@ -1,0 +1,27 @@
+name: Environment Variable Heirarchy
+on: workflow_dispatch
+
+
+env:
+  APP_NAME: myapp
+
+job:
+  inspect-scope:
+    runs-on: ubuntu-latest
+    # 2. Job Level: Available to all steps within this job
+    env:
+      Environment: staging
+    steps:
+      - name: Print Scoped Variables & GitHub Context
+        # 3. Step Level: Available only to this step
+        env:
+          VERSION: 1.0.0
+        run: |
+          echo "=== Scoped Environment Variables ==="
+          echo "App Name (Workflow level) : $APP_NAME"
+          echo "Environment (Job level)   : $ENVIRONMENT"
+          echo "Version (Step level)       : $VERSION"
+
+          echo "=== GitHub Context Metadata ==="
+          echo "Triggered By (Actor)       : ${{ github.actor }}"
+          echo "Commit SHA                 : ${{ github.sha }}"
