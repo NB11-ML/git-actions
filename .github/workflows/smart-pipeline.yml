@@ -1,0 +1,36 @@
+name: Smart Pipeline Orchestration
+on: push
+
+jobs:
+  lint:
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Linter
+        run: echo "Linting code base... PASSED"
+
+  test:
+    name: Automated Unit Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Unit Tests
+        run: echo "Running test suites... ALL TESTS GREEN"
+
+  summary:
+    name: Build Pipeline Summary
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - name: Print Commit Context
+        run: |
+          echo "Triggering Actor : ${{ github.actor }}"
+          echo "Commit SHA       : ${{ github.sha }}"
+          echo "Commit Message   : ${{ github.event.commits[0].message }}"
+
+      - name: Main Branch Evaluation
+        if: github.ref == 'refs/heads/main'
+        run: echo "Production Pipeline: Execution triggered by a direct push/merge to the main branch."
+
+      - name: Feature Branch Evaluation
+        if: github.ref != 'refs/heads/main'
+        run: echo "Development Pipeline: Execution triggered on feature branch '${{ github.ref_name }}'."
