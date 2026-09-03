@@ -1,0 +1,26 @@
+name: Multi-Job Pipeline
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build step
+        run: echo "Building the app"
+
+  test:
+    name: Execute Automated Tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Test step
+        run: echo "Running tests"
+
+  deploy:
+    name: Deploy to Target Environment
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Deploy step
+        run: echo "Deploying"
