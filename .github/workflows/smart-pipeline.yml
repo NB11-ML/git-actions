@@ -29,8 +29,10 @@ jobs:
 
       - name: Main Branch Evaluation
         if: github.ref == 'refs/heads/main'
-        run: echo "Production Pipeline: Execution triggered by a direct push/merge to the main branch."
+        run: |
+          echo "Production Pipeline: Execution triggered by a direct push/merge to the main branch."
 
       - name: Feature Branch Evaluation
         if: github.ref != 'refs/heads/main'
-        run: echo "Development Pipeline: Execution triggered on feature branch '${{ github.ref_name }}'."
+        run: |
+          echo "Development Pipeline: Execution triggered on feature branch '${{ github.ref_name }}'."
