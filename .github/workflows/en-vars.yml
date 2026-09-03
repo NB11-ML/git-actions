@@ -5,7 +5,7 @@ on: workflow_dispatch
 env:
   APP_NAME: myapp
 
-job:
+jobs:
   inspect-scope:
     runs-on: ubuntu-latest
     # 2. Job Level: Available to all steps within this job
