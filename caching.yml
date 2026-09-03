@@ -7,10 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Cache Node Modules
+      - name: Generate Dummy Data to Cache
+        run: |
+          mkdir -p my-test-cache
+          echo "This represents heavy downloaded dependencies." > my-test-cache/dummy-data.txt
+
+      - name: Save Custom Cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          path: my-test-cache
+          key: ${{ runner.os }}-custom-cache-v1
