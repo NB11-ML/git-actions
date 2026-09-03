@@ -2,20 +2,20 @@ name: Cross-Job Data Passing
 on: workflow_dispatch
 
 jobs:
-  generate-data:
+  generate_data:
     name: Generate Pipeline Metadata
     runs-on: ubuntu-latest
     outputs:
-      build_date: ${{ steps.date-step.outputs.current_date }}
+      build_date: ${{ steps.date_step.outputs.current_date }}
     steps:
-      - id: date-step
+      - id: date_step
         name: Fetch and Register Current Date
         run: echo "current_date=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
-  consume-data:
+  consume_data:
     name: Consume Upstream Metadata
     runs-on: ubuntu-latest
-    needs: [generate-data]
+    needs: [generate_data]
     steps:
       - name: Print Received Upstream Output
-        run: echo "The upstream build completed at: ${{ needs.generate-data.outputs.build_date }}"
+        run: echo "The upstream build completed at: ${{ needs.generate_data.outputs.build_date }}"
