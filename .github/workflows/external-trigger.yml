@@ -1,0 +1,12 @@
+name: External API Trigger
+on:
+  repository_dispatch:
+    types: [deploy-request]
+
+jobs:
+  deploy-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read Payload Data
+        run: |
+          echo "External system requested deployment to environment: ${{ github.event.client_payload.environment }}"
