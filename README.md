@@ -17,3 +17,4 @@ A dedicated execution environment for testing CI/CD pipelines, automated workflo
 ## 📂 Repository Structure
 
 All active pipeline configurations are located in the `.github/workflows/` directory. For full theoretical documentation, architectural diagrams, and daily notes, refer to the [Main Journey Repository](https://github.com/NB11-ML/Production-Ready-DevOps-SRE-Journey).
+
