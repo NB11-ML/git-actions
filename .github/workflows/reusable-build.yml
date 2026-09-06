@@ -1,0 +1,52 @@
+name: Reusable Build Engine
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: "Name of the target application"
+        required: true
+        type: string
+      environment:
+        description: "Target deployment environment"
+        required: false
+        type: string
+        default: "staging"
+    secrets:
+      docker_token:
+        description: "Authentication token for registry access"
+        required: true
+    outputs:
+      build_version:
+        description: "Generated immutable build identifier"
+        value: ${{ jobs.build.outputs.version }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.gen-version.outputs.build_version }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Generate Build Version
+        id: gen-version
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "build_version=v1.0-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Application
+        run: |
+          echo "Building ${{ inputs.app_name }} for target environment:${{ inputs.environment }}"
+
+      - name: Validate Secret Injection
+        env:
+          DOCKER_TOKEN: ${{ secrets.docker_token }}
+        run: |
+          if [ -n "$DOCKER_TOKEN" ]; then
+            echo "Docker token is set: true"
+          else
+            echo "Docker token is set: false"
+            exit 1
+          fi
