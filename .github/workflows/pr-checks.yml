@@ -18,10 +18,11 @@ jobs:
                 LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*")
 
                 if [ -n "$LARGE_FILES" ]; then
-                    echo "Error  The following files exceed the 1MB Limit"
+                echo "Error  The following files exceed the 1MB Limit"
                     echo "$LARGE_FILES"
                     exit 1
                 fi
+
                 echo "✅ All files are within the 1MB limit."
     
     branch-name-check:
