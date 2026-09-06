@@ -17,7 +17,7 @@ jobs:
                 # Find any file larger than 1MB (ignoring the hidden .git folder)
                 LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*")
 
-                if[ -n "$LARGE_FILES" ]; then
+                if [ -n "$LARGE_FILES" ]; then
                     echo "Error  The following files exceed the 1MB Limit"
                     echo "$LARGE_FILES"
                     exit 1
