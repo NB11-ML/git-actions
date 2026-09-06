@@ -1,0 +1,19 @@
+name: Deploy Application
+
+on:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Test Status
+        run: |
+          if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+            echo "🚀 Upstream tests passed. Deploying to production..."
+          else
+            echo "❌ Upstream tests failed. Halting deployment."
+            exit 1
+          fi
