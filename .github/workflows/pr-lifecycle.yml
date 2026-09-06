@@ -17,7 +17,7 @@ jobs:
           echo "Target Branch (Base): ${{ github.event.pull_request.base.ref }}"
           
       - name: Execute Post-Merge Logic
-       # This step only runs if the PR is closed AND the 'merged' flag is true
+       #This step only runs if the PR is closed AND the 'merged' flag is true
         if: github.event.action == 'closed' && github.event.pull_request.merged == true
         run: |
           echo "🎉 SUCCESS: PR was successfully merged into ${{ github.event.pull_request.base.ref }}!"      
