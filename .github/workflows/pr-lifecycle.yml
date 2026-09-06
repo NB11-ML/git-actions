@@ -1,0 +1,24 @@
+name: PR Lifecycle Events
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  pr-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log PR Event Details
+        run: |
+          echo "Event Type: ${{ github.event.action }}"
+          echo "Event Type: ${{ github.event.pull_request.title }}"
+          echo "Event Type: ${{ github.event.pull_request.user.login }}"
+          echo "Source Branch (HEAD): ${{ github.event.pull_request.head.ref }}"
+          echo "Target Branch (Base): ${{ github.event.pull_request.base.ref }}"
+          
+      - name: Execute Post-Merge Logic
+       # This step only runs if the PR is closed AND the 'merged' flag is true
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        run: |
+          echo "🎉 SUCCESS: PR was successfully merged into ${{ github.event.pull_request.base.ref }}!"      
+          echo "This is where you would trigger production deployments or clean up temporary environments."
