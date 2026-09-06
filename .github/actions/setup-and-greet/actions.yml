@@ -1,0 +1,44 @@
+name: "Setup and Greet"
+description: "Prints localized system greetings and operational environment data"
+inputs:
+  name:
+    description: "Name of the entity to greet"
+    required: true
+    default: "DevOps Engineer"
+  language:
+    description: "Target greeting language (en, es, fr)"
+    required: false
+    default: "en"
+outputs:
+  greeted:
+    description: "Flag confirming successful greeting execution"
+    value: ${{ steps.set-output.outputs.greeted }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Emit Localized Greeting
+      shell: bash
+      run: |
+        case "${{ inputs.language }}" in
+          es)
+            echo "¡Hola, ${{ inputs.name }}!"
+            ;;
+          fr)
+            echo "Bonjour, ${{ inputs.name }}!"
+            ;;
+          *)
+            echo "Hello, ${{ inputs.name }}!"
+            ;;
+        esac
+
+    - name: Emit Runtime Diagnostics
+      shell: bash
+      run: |
+        echo "Execution Timestamp: $(date -u)"
+        echo "Runner Platform: ${{ runner.os }}"
+
+    - name: Set Status Output
+      id: set-output
+      shell: bash
+      run: echo "greeted=true" >> "$GITHUB_OUTPUT"
