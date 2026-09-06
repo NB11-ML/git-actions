@@ -1,0 +1,36 @@
+name: Scheduled Health Checks
+
+on:
+  schedule:
+    - cron: '30 2 * * 1'   # Every Monday at 2:30 AM UTC
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:       # Allows manual triggering for testing
+
+jobs:
+  health-check:
+    name: Uptime Monitor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Trigger Source
+        run: |
+          if [ "${{ github.event_name }}" == "schedule" ]; then
+            echo " Triggered by cron schedule: ${{ github.event.schedule }}"
+          else
+            echo "👤 Triggered manually via workflow_dispatch"
+          fi
+
+      - name: Execute Health Check (cURL)
+        run: |
+          # The -w flag extracts just the HTTP status code, discarding the HTML body
+          TARGET_URL="https://github.com/TrainWithShubham"
+          HTTP_CODE=$(curl -o /dev/null -s -w "%{http_code}\n" $TARGET_URL)
+          
+          echo "Target URL: $TARGET_URL"
+          echo "HTTP Response Code: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "Health check passed. Site is online."
+          else
+            echo "Health check failed. Site returned $HTTP_CODE."
+            exit 1
+          fi
