@@ -1,61 +1,52 @@
-name: PR validation Gate
+name: PR Validation Gate
 
-on: 
-    pull_request:
-        branches: ["main"]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    file-size-check:
-        name: File Size limit (1MB)
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
+  file-size-check:
+    name: File Size Limit (1MB)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-            - name: Enforce Size limits
-              run: |
-                # Find any file larger than 1MB (ignoring the hidden .git folder)
-                LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*")
+      - name: Enforce Size Limits
+        run: |
+          LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*")
+          if [ -n "$LARGE_FILES" ]; then
+            echo "Error: The following files exceed the 1MB Limit"
+            echo "$LARGE_FILES"
+            exit 1
+          fi
+          echo "✅ All files are within the 1MB limit."
 
-                if [ -n "$LARGE_FILES" ]; then
-                    echo "Error  The following files exceed the 1MB Limit"
-                    echo "$LARGE_FILES"
-                    exit 1
-                fi
+  branch-name-check:
+    name: Branch Naming Convention
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Branch Prefix
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ "$BRANCH" != feature/* && "$BRANCH" != fix/* && "$BRANCH" != docs/* ]]; then
+            echo "Error: Branch '$BRANCH' violates naming conventions."
+            echo "Branches must start with 'feature/', 'fix/' or 'docs/'."
+            exit 1
+          fi
+          echo "✅ Branch name '$BRANCH' is valid."
 
-                echo "✅ All files are within the 1MB limit."
-    
-    branch-name-check:
-        name: Branch Naming Convention
-        runs-on: ubuntu-latest
-        steps:
-            - name: Validate Branch Prefix
-              run: |
-                BRANCH="${{ github.head_ref }}"
-               
-                if  [[ "$BRANCH != feature/* &&  BRANCH != fix/* && BRANCH != Doc/*" ]]; then
-                echo " Error : Branch '$BRANCH' violets naming conventions."
-                echo "Branches must start with 'feature/', 'fix/' or 'docs/'. "
-                exit 1
-                fi
-                echo "Branch name '$BRANCh is valid."
-
-    pr-body-check:
-        name: PR Description Check
-        runs-on: ubuntu-latest
-        steps:
-            - name: validate PR Body
-              env:
-                PR_BODY: ${{ github.event.pull_request.body }}
-              run: |
-                if [ -z "PR_BODY" ]; then
-                    # The ::warning:: syntax highlights yellow in GitHub Actions UI without failing the job
-                    echo "::warning title=Empty PR Description::Please provide a detailed description of your changes."
-                else
-                    echo "PR description is present"
-                fi
-
-
-
-
-
+  pr-body-check:
+    name: PR Description Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if [ -z "$PR_BODY" ]; then
+            echo "::warning title=Empty PR Description::Please provide a detailed description of your changes."
+          else
+            echo "✅ PR description is present"
+          fi
