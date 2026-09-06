@@ -1,0 +1,12 @@
+name: Skip on Docs
+
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Triggered because the changes were NOT just markdown or docs."
