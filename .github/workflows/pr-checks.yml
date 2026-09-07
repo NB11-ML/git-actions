@@ -12,11 +12,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Enforce Size Limits
         run: |
-          LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*")
-          if [ -n "$LARGE_FILES" ]; then
+          set -euo pipefail
+          LARGE_FILES=$(find . -type f -size +1M -not -path "*/\.git/*" 2>/dev/null)
+          if [ -n "${LARGE_FILES:-}" ]; then
             echo 'Error: The following files exceed the 1MB Limit'
             echo "$LARGE_FILES"
             exit 1
